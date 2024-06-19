@@ -1,0 +1,389 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+
+    <!-- Insert 22 sample housemates from past seasons -->
+    <changeSet id="insert-sample-housemates" author="Ngai Elizabeth">
+        <insert tableName="housemates">
+            <column name="id" value="1"/>
+            <column name="name" value="Efe Ejeba"/>
+            <column name="bio" value="Winner of Big Brother Naija Season 2"/>
+            <column name="status" value="WINNER"/>
+            <column name="image_url" value="http://example.com/efe.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="2"/>
+            <column name="name" value="Bisola Aiyeola"/>
+            <column name="bio" value="First runner-up of Big Brother Naija Season 2"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/bisola.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="3"/>
+            <column name="name" value="Tobi Bakre"/>
+            <column name="bio" value="Second runner-up of Big Brother Naija Season 3"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/tobi.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="4"/>
+            <column name="name" value="Cee-C Nwadiora"/>
+            <column name="bio" value="First runner-up of Big Brother Naija Season 3"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/ceec.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="5"/>
+            <column name="name" value="Miracle Igbokwe"/>
+            <column name="bio" value="Winner of Big Brother Naija Season 3"/>
+            <column name="status" value="WINNER"/>
+            <column name="image_url" value="http://example.com/miracle.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="6"/>
+            <column name="name" value="Laycon Agbeleshe"/>
+            <column name="bio" value="Winner of Big Brother Naija Season 5"/>
+            <column name="status" value="WINNER"/>
+            <column name="image_url" value="http://example.com/laycon.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="7"/>
+            <column name="name" value="Dorathy Bachor"/>
+            <column name="bio" value="First runner-up of Big Brother Naija Season 5"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/dorathy.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="8"/>
+            <column name="name" value="Nengi Hampson"/>
+            <column name="bio" value="Second runner-up of Big Brother Naija Season 5"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/nengi.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="9"/>
+            <column name="name" value="Mercy Eke"/>
+            <column name="bio" value="Winner of Big Brother Naija Season 4"/>
+            <column name="status" value="WINNER"/>
+            <column name="image_url" value="http://example.com/mercy.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="10"/>
+            <column name="name" value="Mike Edwards"/>
+            <column name="bio" value="First runner-up of Big Brother Naija Season 4"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/mike.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="11"/>
+            <column name="name" value="Frodd"/>
+            <column name="bio" value="Second runner-up of Big Brother Naija Season 4"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/frodd.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="12"/>
+            <column name="name" value="Tacha Akide"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 4"/>
+            <column name="status" value="ELIMINATED"/>
+            <column name="image_url" value="http://example.com/tacha.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="13"/>
+            <column name="name" value="Neo Akpofure"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 5"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/neo.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="14"/>
+            <column name="name" value="Veeiye"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 5"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/veeiye.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="15"/>
+            <column name="name" value="Erica Nlewedim"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 5"/>
+            <column name="status" value="ELIMINATED"/>
+            <column name="image_url" value="http://example.com/erica.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="16"/>
+            <column name="name" value="Prince Nelson"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 5"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/prince.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="17"/>
+            <column name="name" value="Pere Egbi"/>
+            <column name="bio" value="Second runner-up of Big Brother Naija Season 6"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/pere.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="18"/>
+            <column name="name" value="Liquorose"/>
+            <column name="bio" value="First runner-up of Big Brother Naija Season 6"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/liquorose.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="19"/>
+            <column name="name" value="Whitemoney"/>
+            <column name="bio" value="Winner of Big Brother Naija Season 6"/>
+            <column name="status" value="WINNER"/>
+            <column name="image_url" value="http://example.com/whitemoney.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="20"/>
+            <column name="name" value="Angel Smith"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 6"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/angel.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="21"/>
+            <column name="name" value="Cross Ike"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 6"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/cross.jpg"/>
+        </insert>
+        <insert tableName="housemates">
+            <column name="id" value="22"/>
+            <column name="name" value="Nina Ivy"/>
+            <column name="bio" value="Popular contestant from Big Brother Naija Season 3"/>
+            <column name="status" value="EVICTED"/>
+            <column name="image_url" value="http://example.com/nina.jpg"/>
+        </insert>
+    </changeSet>
+
+    <!-- Insert initial data into the tables -->
+    <changeSet id="insert sample data for testing" author="Ngai Elizabeth" context="test">
+        <!-- Insert Game -->
+        <insert tableName="game">
+            <column name="id" value="1"/>
+            <column name="name" value="Big Brother"/>
+        </insert>
+
+        <!-- Insert Categories -->
+        <insert tableName="category">
+            <column name="id" value="1"/>
+            <column name="game_id" value="1"/>
+            <column name="name" value="Big Brother Cameroon"/>
+        </insert>
+        <insert tableName="category">
+            <column name="id" value="2"/>
+            <column name="game_id" value="1"/>
+            <column name="name" value="Big Brother Naija"/>
+        </insert>
+
+        <!-- Insert Tournaments -->
+        <insert tableName="tournament">
+            <column name="id" value="1"/>
+            <column name="category_id" value="2"/>
+            <column name="name" value="BBNaija Season 3"/>
+        </insert>
+        <insert tableName="tournament">
+            <column name="id" value="2"/>
+            <column name="category_id" value="1"/>
+            <column name="name" value="Big Brother 237 Season 4"/>
+        </insert>
+
+        <!-- Insert Events for BBNaija Season 3 -->
+        <insert tableName="event">
+            <column name="id" value="1"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Week 1 Nominations"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="event_date" value="2024-07-25 20:00:00"/>
+        </insert>
+        <insert tableName="event">
+            <column name="id" value="2"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Week 2 Nominations"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="event_date" value="2024-08-01 20:00:00"/>
+        </insert>
+        <insert tableName="event">
+            <column name="id" value="3"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Week 1 Eviction"/>
+            <column name="type" value="EVICTIONS"/>
+            <column name="event_date" value="2024-07-28 20:00:00"/>
+        </insert>
+        <insert tableName="event">
+            <column name="id" value="4"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Week 2 Eviction"/>
+            <column name="type" value="EVICTIONS"/>
+            <column name="event_date" value="2024-08-04 20:00:00"/>
+        </insert>
+        <insert tableName="event">
+            <column name="id" value="5"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Head of House Week 1"/>
+            <column name="type" value="HEAD_OF_HOUSE"/>
+            <column name="event_date" value="2024-07-26 20:00:00"/>
+        </insert>
+        <insert tableName="event">
+            <column name="id" value="6"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Ultimate Winner"/>
+            <column name="type" value="WINNER"/>
+            <column name="event_date" value="2024-09-01 20:00:00"/>
+        </insert>
+        <insert tableName="event">
+            <column name="id" value="7"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Housemate Disqualified"/>
+            <column name="type" value="DISQUALIFICATION"/>
+            <column name="event_date" value="2024-09-01 20:00:00"/>
+        </insert>
+
+        <!-- Insert Outcomes for BBNaija Season 3 Events -->
+        <!-- Week 1 Nominations -->
+        <insert tableName="outcome">
+            <column name="id" value="1"/>
+            <column name="event_id" value="1"/>
+            <column name="description" value="Housemate A will be nominated this week"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="2"/>
+            <column name="event_id" value="1"/>
+            <column name="description" value="Housemate B will be nominated this week"/>
+            <column name="odds" value="2.0"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="3"/>
+            <column name="event_id" value="1"/>
+            <column name="description" value="Housemate C will be nominated this week"/>
+            <column name="odds" value="2.5"/>
+        </insert>
+
+        <!-- Week 2 Nominations -->
+        <insert tableName="outcome">
+            <column name="id" value="4"/>
+            <column name="event_id" value="2"/>
+            <column name="description" value="Housemate D will be nominated this week"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="5"/>
+            <column name="event_id" value="2"/>
+            <column name="description" value="Housemate E will be nominated this week"/>
+            <column name="odds" value="2.0"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="6"/>
+            <column name="event_id" value="2"/>
+            <column name="description" value="Housemate F will be nominated this week"/>
+            <column name="odds" value="2.5"/>
+        </insert>
+
+        <!-- Week 1 Eviction -->
+        <insert tableName="outcome">
+            <column name="id" value="7"/>
+            <column name="event_id" value="3"/>
+            <column name="description" value="Housemate A will be evicted"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="8"/>
+            <column name="event_id" value="3"/>
+            <column name="description" value="Housemate B will be evicted"/>
+            <column name="odds" value="2.0"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="9"/>
+            <column name="event_id" value="3"/>
+            <column name="description" value="Housemate C will be evicted"/>
+            <column name="odds" value="2.5"/>
+        </insert>
+
+        <!-- Week 2 Eviction -->
+        <insert tableName="outcome">
+            <column name="id" value="10"/>
+            <column name="event_id" value="4"/>
+            <column name="description" value="Housemate D will be evicted"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="11"/>
+            <column name="event_id" value="4"/>
+            <column name="description" value="Housemate E will be evicted"/>
+            <column name="odds" value="2.0"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="12"/>
+            <column name="event_id" value="4"/>
+            <column name="description" value="Housemate F will be evicted"/>
+            <column name="odds" value="2.5"/>
+        </insert>
+
+        <!-- Head of House Week 1 -->
+        <insert tableName="outcome">
+            <column name="id" value="13"/>
+            <column name="event_id" value="5"/>
+            <column name="description" value="Housemate A will be the Head of House"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="14"/>
+            <column name="event_id" value="5"/>
+            <column name="description" value="Housemate B will be the Head of House"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="15"/>
+            <column name="event_id" value="5"/>
+            <column name="description" value="Housemate C will be the Head of House"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+
+        <!-- Ultimate Winner -->
+        <insert tableName="outcome">
+            <column name="id" value="16"/>
+            <column name="event_id" value="6"/>
+            <column name="description" value="Housemate A will be the ultimate winner"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="17"/>
+            <column name="event_id" value="6"/>
+            <column name="description" value="Housemate B will be the ultimate winner"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="18"/>
+            <column name="event_id" value="6"/>
+            <column name="description" value="Housemate C will be the ultimate winner"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+
+        <!-- Eliminations -->
+        <insert tableName="outcome">
+            <column name="id" value="19"/>
+            <column name="event_id" value="7"/>
+            <column name="description" value="Housemate A will be eliminated"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="20"/>
+            <column name="event_id" value="7"/>
+            <column name="description" value="Housemate B will be eliminated"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="21"/>
+            <column name="event_id" value="7"/>
+            <column name="description" value="Housemate C will be eliminated"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>

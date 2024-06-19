@@ -25,9 +25,6 @@ public class BetItem {
     @Column(name = "event_id", nullable = false)
     private Long event;
 
-    @Column(name = "prediction", nullable = false)
-    private String prediction;
-
     @Column(name = "odds", nullable = false, precision = 19, scale = 2)
     private BigDecimal odds;
 
@@ -40,5 +37,8 @@ public class BetItem {
 
     @Column(name = "updated_at")
     private Instant updatedAt;
+
+    @Column(name = "outcome_id", nullable = false)
+    private Long outcomeId;
 
 }

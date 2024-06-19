@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 
 @Service
@@ -130,12 +131,26 @@ public class AdminService {
     }
 
     // Get events and outcomes by tournament
-    public List<Event> getEventsByTournament(Long tournamentId) {
-        return eventRepository.findByTournamentId(tournamentId);
+    public List<EventDto> getEventsByTournament(Long tournamentId) {
+        return eventRepository.findByTournamentId(tournamentId).stream()
+                .map((element) -> modelMapper.map(element, EventDto.class))
+                .toList();
     }
 
-    public List<Outcome> getOutcomesByEvent(Long eventId) {
-        return outcomeRepository.findByEventId(eventId);
+    public List<OutcomeDto> getOutcomesByEvent(Long eventId) {
+        return outcomeRepository.findByEventId(eventId).stream()
+                .map((element) -> modelMapper.map(element, OutcomeDto.class))
+                .toList();
+    }
+
+    public List<Game> getGames() {
+        return gameRepository.findAll();
+    }
+
+    public List<CategoryDto> gameCategories(long gameId) {
+        return categoryRepository.findByGameId(gameId).stream()
+                .map((element) -> modelMapper.map(element, CategoryDto.class))
+                .toList();
     }
 }
 

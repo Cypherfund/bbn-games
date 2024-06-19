@@ -22,7 +22,7 @@ public class PredictionRequest {
         @Data
         public static class Event {
             private Long eventId;
-            private String prediction;
+            private Long prediction;
             private BigDecimal odds;
         }
     }

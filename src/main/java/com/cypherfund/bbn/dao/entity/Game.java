@@ -1,5 +1,6 @@
 package com.cypherfund.bbn.dao.entity;
 
+import com.cypherfund.bbn.utils.Enumerations;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,5 +17,9 @@ public class Game {
 
     @Column(name = "name", nullable = false)
     private String name;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "status")
+    private Enumerations.GAME_STATUS status;
 
 }

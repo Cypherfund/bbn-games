@@ -33,17 +33,17 @@ public class ISettlementServiceImpl implements ISettlementService {
 
     @Override
     @Transactional
-    public void processWinningsOdds(Integer eventId, Integer winningHousemateId) {
+    public void processWinningsOdds(Integer eventId, Integer winningOutcomeId) {
         log.info("Processing winnings for event {}", eventId);
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
-        housemateRepository.findById(winningHousemateId).orElseThrow(() -> new RuntimeException("Housemate not found"));
+        housemateRepository.findById(winningOutcomeId).orElseThrow(() -> new RuntimeException("Housemate not found"));
 
-        event.setOutcome(winningHousemateId.toString());
+        event.setOutcome(winningOutcomeId.toString());
         event.setStatus(SETTLED);
 
         eventRepository.save(event);
 
-        List<BetItem> betItems = settleBetItems(eventId, winningHousemateId);
+        List<BetItem> betItems = settleBetItems(eventId, winningOutcomeId);
 
         List<Bet> bets = betItems.stream()
                 .map(BetItem::getBet)
@@ -95,7 +95,7 @@ public class ISettlementServiceImpl implements ISettlementService {
     }
 
     @Override
-    public void confirmWinnings(Integer eventId, Integer winningHousemateId) {
+    public void confirmWinnings(Integer eventId, Integer winningOutcomeId) {
 //        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new RuntimeException("Ticket not found"));
 //        if ("won".equals(ticket.getStatus())) {
 //            WinningTicket winningTicket = winningTicketRepository.findByTicketId(ticketId)
@@ -160,7 +160,7 @@ public class ISettlementServiceImpl implements ISettlementService {
     private List<BetItem> settleBetItems(Integer eventId, Integer winningHousemateId) {
         List<BetItem> betItems = betItemRepository.findByEvent(eventId);
         for (BetItem betItem : betItems) {
-            if (betItem.getPrediction().equals(winningHousemateId.toString())) {
+            if (betItem.getOutcomeId().intValue() == winningHousemateId) {
                 betItem.setStatus(WON);
             } else {
                 betItem.setStatus(LOST);

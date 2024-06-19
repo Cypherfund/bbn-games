@@ -3,7 +3,6 @@ package com.cypherfund.bbn.services.impl;
 import com.cypherfund.bbn.dao.entity.Bet;
 import com.cypherfund.bbn.dao.entity.BetItem;
 import com.cypherfund.bbn.dao.entity.Ticket;
-import com.cypherfund.bbn.dao.repository.AuditLogRepository;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;
 import com.cypherfund.bbn.dao.repository.TicketRepository;
@@ -27,7 +26,6 @@ public class IBettingServiceImpl implements IBettingService {
     private final TicketRepository ticketRepository;
     private final BetRepository betRepository;
     private final BetItemRepository betItemRepository;
-    private final AuditLogRepository auditLogRepository;
     private static final BigDecimal TAX_RATE = new BigDecimal("0.1"); // 10% tax
 
     @Override
@@ -66,7 +64,7 @@ public class IBettingServiceImpl implements IBettingService {
                 BetItem betItem = new BetItem();
                 betItem.setBet(newBet);
                 betItem.setEvent(event.getEventId());
-                betItem.setPrediction(event.getPrediction());
+                betItem.setOutcomeId(event.getPrediction());
                 betItem.setOdds(event.getOdds());
                 betItem.setStatus(BetStatus.PENDING);
                 betItem.setCreatedAt(Instant.now());

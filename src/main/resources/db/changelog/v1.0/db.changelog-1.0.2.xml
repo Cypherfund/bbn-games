@@ -89,76 +89,10 @@
                                  referencedColumnNames="id"/>
     </changeSet>
 
-    <changeSet id="insert-games" author="Ngai Elizabeth" context="test">
-        <insert tableName="game">
-            <column name="name" value="Big Brother Naija"/>
-        </insert>
-        <insert tableName="game">
-            <column name="name" value="Quiz Show"/>
-        </insert>
-    </changeSet>
 
-    <changeSet id="insert-initial-categories" author="Ngai Elizabeth" context="test">
-        <insert tableName="category">
-            <column name="name" value="Reality TV Shows"/>
-            <column name="game_id" valueNumeric="1"/>
-        </insert>
-        <insert tableName="category">
-            <column name="name" value="Quiz Shows"/>
-            <column name="game_id" valueNumeric="2"/>
-        </insert>
+    <changeSet id="add status to game table" author="Ngai Elizabeth">
+        <addColumn tableName="game">
+            <column name="status" type="ENUM('ACTIVE', 'INACTIVE')"/>
+        </addColumn>
     </changeSet>
-
-    <changeSet id="insert-initial-tournaments" author="Ngai Elizabeth" context="test">
-        <insert tableName="tournament">
-            <column name="name" value="Big Brother Naija Season 1"/>
-            <column name="category_id" valueNumeric="1"/>
-            <column name="start_date" valueDate="2024-01-01"/>
-            <column name="end_date" valueDate="2024-03-31"/>
-        </insert>
-        <insert tableName="tournament">
-            <column name="name" value="Big Brother Naija Season 2"/>
-            <column name="category_id" valueNumeric="1"/>
-            <column name="start_date" valueDate="2025-01-01"/>
-            <column name="end_date" valueDate="2025-03-31"/>
-        </insert>
-        <insert tableName="tournament">
-            <column name="name" value="National Quiz Competition 2024"/>
-            <column name="category_id" valueNumeric="2"/>
-            <column name="start_date" valueDate="2024-07-15"/>
-            <column name="end_date" valueDate="2024-07-20"/>
-        </insert>
-    </changeSet>
-    <changeSet id="insert-sample-events" author="Ngai Elizabeth" context="test">
-        <insert tableName="event" schemaName="bbn">
-            <column name="name" value="Opening Ceremony"/>
-            <column name="type" value="NOMINATIONS"/>
-            <column name="status" value="SETTLED"/>
-            <column name="event_date" value="2024-01-01 18:00:00"/>
-            <column name="tournament_id" valueNumeric="1"/>
-        </insert>
-        <insert tableName="event" schemaName="bbn">
-            <column name="name" value="First Eviction"/>
-            <column name="type" value="EVICTIONS"/>
-            <column name="status" value="PENDING"/>
-            <column name="event_date" value="2024-01-08 20:00:00"/>
-            <column name="tournament_id" valueNumeric="1"/>
-        </insert>
-        <insert tableName="event" schemaName="bbn">
-            <column name="name" value="Cooking Challenge"/>
-            <column name="type" value="TASKS"/>
-            <column name="status" value="PENDING"/>
-            <column name="event_date" value="2024-01-15 15:00:00"/>
-            <column name="tournament_id" valueNumeric="1"/>
-        </insert>
-        <insert tableName="event" schemaName="bbn">
-            <column name="name" value="Final"/>
-            <column name="type" value="NOMINATIONS"/>
-            <column name="outcome" value="To be decided"/>
-            <column name="status" value="SETTLED"/>
-            <column name="event_date" value="2024-01-29 20:00:00"/>
-            <column name="tournament_id" valueNumeric="1"/>
-        </insert>
-    </changeSet>
-
 </databaseChangeLog>

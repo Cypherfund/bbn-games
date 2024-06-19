@@ -20,8 +20,8 @@ import java.math.BigDecimal;
 
 import java.util.List;
 
-import static org.hamcrest.Matchers.any;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.when;
@@ -65,21 +65,21 @@ class IBettingServiceImplTest {
     void placeBet() {
         Ticket savedTicket = new Ticket();
         savedTicket.setId(1L);
-        when(ticketRepository.save(savedTicket)).thenReturn(savedTicket);
+        when(ticketRepository.save(any(Ticket.class))).thenReturn(savedTicket);
 
         Bet savedBet = new Bet();
         savedBet.setId(1L);
-        when(betRepository.save(savedBet)).thenReturn(savedBet);
+        when(betRepository.save(any(Bet.class))).thenReturn(savedBet);
 
         BetItem savedBetItem = new BetItem();
         savedBetItem.setId(1L);
-        when(betItemRepository.save(savedBetItem)).thenReturn(savedBetItem);
+        when(betItemRepository.save(any(BetItem.class))).thenReturn(savedBetItem);
 
         bettingService.placeBet(predictionRequest);
 
-        verify(ticketRepository, times(1)).save(savedTicket);
-        verify(betRepository, times(1)).save(savedBet);
-        verify(betItemRepository, times(1)).save(savedBetItem);
+        verify(ticketRepository, times(1)).save(any(Ticket.class));
+        verify(betRepository, times(1)).save(any(Bet.class));
+        verify(betItemRepository, times(1)).save(any(BetItem.class));
     }
 
     @Test
@@ -87,4 +87,5 @@ class IBettingServiceImplTest {
         BigDecimal potentialWinnings = bettingService.calculatePotentialWinnings(predictionRequest.getBets().get(0));
         assertEquals(new BigDecimal("200.0"), potentialWinnings);
     }
+
 }
