@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="create winning ticket" author="Ngai Elizabeth">
+        <createTable tableName="winning_ticket">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_winnings" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="tax_amount" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="final_winnings" type="DECIMAL(10,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="fk_winning_ticket_ticket" author="Ngai Elizabeth">
+        <addForeignKeyConstraint constraintName="fk_winning_ticket_ticket"
+                                 baseTableName="winning_ticket"
+                                 baseColumnNames="ticket_id"
+                                 referencedTableName="ticket"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="add_user_id_to_winning_ticket" author="Ngai Elizabeth">
+        <addColumn tableName="winning_ticket">
+            <column name="user_id" type="VARCHAR(50)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="change_user_id_to_varchar" author="Ngai Elizabeth">
+        <modifyDataType tableName="ticket"
+                        columnName="user_id"
+                        newDataType="VARCHAR(50)"/>
+        <modifyDataType tableName="winning_ticket"
+                        columnName="user_id"
+                        newDataType="VARCHAR(50)"/>
+    </changeSet>
+    <changeSet id="remove_ticket_id_and_add_bet_id" author="Ngai Elizabeth">
+        <dropForeignKeyConstraint baseTableName="winning_ticket"
+                                  constraintName="fk_winning_ticket_ticket"/>
+        <dropColumn tableName="winning_ticket" columnName="ticket_id"/>
+        <addColumn tableName="winning_ticket">
+            <column name="bet_id" type="BIGINT"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_winning_ticket_bet"
+                                 baseTableName="winning_ticket"
+                                 baseColumnNames="bet_id"
+                                 referencedTableName="bet"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create_jackpot_event" author="Ngai Elizabeth">
+        <createTable tableName="jackpot_event">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="jackpot_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="ENUM('SETTLED', 'CANCELLED', 'PENDING')" defaultValue="PENDING">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="fk_jackpot_event_jackpot" author="Ngai Elizabeth">
+        <addForeignKeyConstraint constraintName="fk_jackpot_event_jackpot"
+                                 baseTableName="jackpot_event"
+                                 baseColumnNames="jackpot_id"
+                                 referencedTableName="jackpots"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="fk_jackpot_event_event" author="Ngai Elizabeth">
+        <addForeignKeyConstraint constraintName="fk_jackpot_event_event"
+                                 baseTableName="jackpot_event"
+                                 baseColumnNames="event_id"
+                                 referencedTableName="event"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="add_amount_to_bet" author="Ngai Elizabeth">
+        <addColumn tableName="bet">
+            <column name="amount" type="DECIMAL(10,2)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add_jackpot_id_to_bet" author="Ngai Elizabeth">
+        <addColumn tableName="bet">
+            <column name="jackpot_id" type="INT"/>
+        </addColumn>
+    </changeSet>
+    <changeSet id="fk_bet_jackpot" author="Ngai Elizabeth">
+        <addForeignKeyConstraint constraintName="fk_bet_jackpot"
+                                 baseTableName="bet"
+                                 baseColumnNames="jackpot_id"
+                                 referencedTableName="jackpots"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog>

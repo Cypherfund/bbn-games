@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <changeSet id="create table event" author="Ngai Elizabeth">
+        <createTable tableName="event">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="outcome" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(50)" defaultValue="pending"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create housemate table" author="Ngai Elizabeth">
+        <createTable tableName="housemates">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(100)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bio" type="TEXT"/>
+            <column name="status" type="ENUM('CONTESTANT', 'EVICTED', 'ELIMINATED', 'WINNER')" defaultValue="CONTESTANT"/>
+            <column name="image_url" type="VARCHAR(255)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+    <changeSet id="create ticket table" author="Ngai Elizabeth">
+        <createTable tableName="ticket">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="type" type="ENUM('JACKPOT', 'ODDS')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_amount" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="total_odds" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="ENUM('PENDING', 'WON', 'LOST', 'CANCELLED', 'REJECTED')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="correct_predictions" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create bet table" author="Ngai Elizabeth">
+        <createTable tableName="bet">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="ticket_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="bet_type" type="ENUM('SINGLE', 'MULTIPLE')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="ENUM('PENDING', 'WON', 'LOST', 'CANCELLED', 'REJECTED')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="bet"
+                                 baseColumnNames="ticket_id"
+                                 constraintName="fk_bets_ticket_id"
+                                 referencedTableName="ticket"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="create bet item" author="Ngai Elizabeth">
+        <createTable tableName="bet_item">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="bet_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="prediction" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="odds" type="DECIMAL(19,2)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="status" type="ENUM('PENDING', 'WON', 'LOST', 'CANCELLED')">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+        <addForeignKeyConstraint baseTableName="bet_item"
+                                 baseColumnNames="bet_id"
+                                 constraintName="fk_bet_items_bet_id"
+                                 referencedTableName="bet"
+                                 referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="bet_item"
+                                 baseColumnNames="event_id"
+                                 constraintName="fk_bet_items_event_id"
+                                 referencedTableName="event"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+    <changeSet id="create table jackpot rules" author="Ngai Elizabeth">
+        <createTable tableName="jackpot_rules">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="jackpot_type" type="VARCHAR(50)"/>
+            <column name="correct_predictions" type="INT"/>
+            <column name="prize_percentage" type="DECIMAL(5,2)"/>
+            <column name="voided_events_allowed" type="INT"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create table jackpot" author="Ngai Elizabeth">
+        <createTable tableName="jackpots">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="jackpot_type" type="VARCHAR(50)"/>
+            <column name="status" type="VARCHAR(20)" defaultValue="active"/>
+            <column name="total_stake" type="DECIMAL(10,2)" defaultValue="0"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+            <column name="updated_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create table for record transactions" author="Ngai Elizabeth">
+        <createTable tableName="transactions">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="user_id" type="INT"/>
+            <column name="type" type="ENUM('BET', 'WINNING')"/>
+            <column name="amount" type="DECIMAL(10,2)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="create audit log table" author="Ngai Elizabeth">
+        <createTable tableName="audit_log">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="entity_id" type="varchar(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="entity_type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="message" type="varchar(255)"/>
+            <column name="action_type" type="VARCHAR(50)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="old_value" type="DECIMAL(10,2)"/>
+            <column name="new_value" type="DECIMAL(10,2)"/>
+            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add indexes to audit log table" author="Ngai Elizabeth">
+        <createIndex indexName="idx_entity" tableName="audit_log">
+            <column name="entity_id"/>
+            <column name="entity_type"/>
+        </createIndex>
+    </changeSet>
+
+    <changeSet id="add columns to bet table" author="Ngai Elizabeth">
+        <addColumn tableName="bet">
+            <column name="potential_winnings" type="DECIMAL(10,2)" afterColumn="status"/>
+            <column name="tax_amount" type="DECIMAL(10,2)" afterColumn="potential_winnings"/>
+            <column name="final_winnings" type="DECIMAL(10,2)" afterColumn="tax_amount"/>
+        </addColumn>
+    </changeSet>
+</databaseChangeLog>

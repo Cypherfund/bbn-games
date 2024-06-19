@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
+    <!-- Changeset for creating the 'game' table -->
+    <changeSet id="create game table" author="Ngai Elizabeth">
+        <createTable tableName="game">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <!-- Changeset for creating the 'categories' table -->
+    <changeSet id="create category" author="Ngai Elizabeth">
+        <createTable tableName="category">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="game_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_category_game"
+                                 baseTableName="category"
+                                 baseColumnNames="game_id"
+                                 referencedTableName="game"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Changeset for creating the 'tournaments' table -->
+    <changeSet id="create table tournament" author="Ngai Elizabeth">
+        <createTable tableName="tournament">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="name" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="category_id" type="BIGINT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="start_date" type="DATE"/>
+            <column name="end_date" type="DATE"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_tournament_category"
+                                 baseTableName="tournament"
+                                 baseColumnNames="category_id"
+                                 referencedTableName="category"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <!-- Changeset for creating the 'outcomes' table -->
+    <changeSet id="create table outcome" author="Ngai Elizabeth">
+        <createTable tableName="outcome">
+            <column name="id" type="BIGINT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="event_id" type="INT">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="odds" type="DECIMAL(10, 2)"/>
+        </createTable>
+        <addForeignKeyConstraint constraintName="fk_outcome_event"
+                                 baseTableName="outcome"
+                                 baseColumnNames="event_id"
+                                 referencedTableName="event"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="add event date and tournament_id to event table" author="Ngai Elizabeth">
+        <addColumn tableName="event">
+            <column name="event_date" type="TIMESTAMP"/>
+            <column name="tournament_id" type="BIGINT"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_event_tournament"
+                                 baseTableName="event"
+                                 baseColumnNames="tournament_id"
+                                 referencedTableName="tournament"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
+    <changeSet id="insert-games" author="Ngai Elizabeth" context="test">
+        <insert tableName="game">
+            <column name="name" value="Big Brother Naija"/>
+        </insert>
+        <insert tableName="game">
+            <column name="name" value="Quiz Show"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-initial-categories" author="Ngai Elizabeth" context="test">
+        <insert tableName="category">
+            <column name="name" value="Reality TV Shows"/>
+            <column name="game_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="category">
+            <column name="name" value="Quiz Shows"/>
+            <column name="game_id" valueNumeric="2"/>
+        </insert>
+    </changeSet>
+
+    <changeSet id="insert-initial-tournaments" author="Ngai Elizabeth" context="test">
+        <insert tableName="tournament">
+            <column name="name" value="Big Brother Naija Season 1"/>
+            <column name="category_id" valueNumeric="1"/>
+            <column name="start_date" valueDate="2024-01-01"/>
+            <column name="end_date" valueDate="2024-03-31"/>
+        </insert>
+        <insert tableName="tournament">
+            <column name="name" value="Big Brother Naija Season 2"/>
+            <column name="category_id" valueNumeric="1"/>
+            <column name="start_date" valueDate="2025-01-01"/>
+            <column name="end_date" valueDate="2025-03-31"/>
+        </insert>
+        <insert tableName="tournament">
+            <column name="name" value="National Quiz Competition 2024"/>
+            <column name="category_id" valueNumeric="2"/>
+            <column name="start_date" valueDate="2024-07-15"/>
+            <column name="end_date" valueDate="2024-07-20"/>
+        </insert>
+    </changeSet>
+    <changeSet id="insert-sample-events" author="Ngai Elizabeth" context="test">
+        <insert tableName="event" schemaName="bbn">
+            <column name="name" value="Opening Ceremony"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="status" value="SETTLED"/>
+            <column name="event_date" value="2024-01-01 18:00:00"/>
+            <column name="tournament_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="event" schemaName="bbn">
+            <column name="name" value="First Eviction"/>
+            <column name="type" value="EVICTIONS"/>
+            <column name="status" value="PENDING"/>
+            <column name="event_date" value="2024-01-08 20:00:00"/>
+            <column name="tournament_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="event" schemaName="bbn">
+            <column name="name" value="Cooking Challenge"/>
+            <column name="type" value="TASKS"/>
+            <column name="status" value="PENDING"/>
+            <column name="event_date" value="2024-01-15 15:00:00"/>
+            <column name="tournament_id" valueNumeric="1"/>
+        </insert>
+        <insert tableName="event" schemaName="bbn">
+            <column name="name" value="Final"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="outcome" value="To be decided"/>
+            <column name="status" value="SETTLED"/>
+            <column name="event_date" value="2024-01-29 20:00:00"/>
+            <column name="tournament_id" valueNumeric="1"/>
+        </insert>
+    </changeSet>
+
+</databaseChangeLog>
