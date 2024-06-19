@@ -6,13 +6,17 @@ import com.cypherfund.bbn.dto.CategoryDto;
 import com.cypherfund.bbn.dto.EventDto;
 import com.cypherfund.bbn.dto.OutcomeDto;
 import com.cypherfund.bbn.dto.TournamentDto;
+import com.cypherfund.bbn.exception.AppException;
+import com.cypherfund.bbn.models.CreateOutcomeRequest;
 import com.cypherfund.bbn.utils.Enumerations;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 
@@ -25,6 +29,8 @@ public class AdminService {
     private final TournamentRepository tournamentRepository;
     private final EventRepository eventRepository;
     private final OutcomeRepository outcomeRepository;
+    private final EventTypeTemplateRepository eventTypeTemplateRepository;
+    private final HousemateRepository housemateRepository;
     private final ModelMapper modelMapper;
 
 
@@ -34,7 +40,7 @@ public class AdminService {
     }
 
     public Game updateGame(Long id, Game gameDetails) {
-        Game game = gameRepository.findById(id).orElseThrow(() -> new RuntimeException("Game not found"));
+        Game game = gameRepository.findById(id).orElseThrow(() -> new AppException("Game not found"));
         game.setName(gameDetails.getName());
         return gameRepository.save(game);
     }
@@ -47,14 +53,14 @@ public class AdminService {
     public CategoryDto createCategory(CategoryDto categoryDto) {
         Category category = new Category();
         category.setName(categoryDto.getName());
-        category.setGame(gameRepository.findById(categoryDto.getGameId()).orElseThrow(() -> new RuntimeException("Game not found")));
+        category.setGame(gameRepository.findById(categoryDto.getGameId()).orElseThrow(() -> new AppException("Game not found")));
         return modelMapper.map(categoryRepository.save(category), CategoryDto.class);
     }
 
     public CategoryDto updateCategory(Long id, CategoryDto categoryDetails) {
-        Category category = categoryRepository.findById(id).orElseThrow(() -> new RuntimeException("Category not found"));
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new AppException("Category not found"));
         category.setName(categoryDetails.getName());
-        category.setGame(gameRepository.findById(categoryDetails.getGameId()).orElseThrow(() -> new RuntimeException("Game not found")));
+        category.setGame(gameRepository.findById(categoryDetails.getGameId()).orElseThrow(() -> new AppException("Game not found")));
         return modelMapper.map(categoryRepository.save(category), CategoryDto.class);
     }
 
@@ -65,19 +71,13 @@ public class AdminService {
     // Tournament management
     public TournamentDto createTournament(TournamentDto tournamentDto) {
         Tournament tournament = new Tournament();
-        tournament.setName(tournamentDto.getName());
-        tournament.setStartDate(tournamentDto.getStartDate());
-        tournament.setEndDate(tournamentDto.getEndDate());
-        tournament.setCategory(categoryRepository.findById(tournamentDto.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found")));
+        buildTournamentEntity(tournamentDto, tournament);
         return modelMapper.map(tournamentRepository.save(tournament), TournamentDto.class);
     }
 
     public TournamentDto updateTournament(Long id, TournamentDto tournamentDetails) {
-        Tournament tournament = tournamentRepository.findById(id).orElseThrow(() -> new RuntimeException("Tournament not found"));
-        tournament.setName(tournamentDetails.getName());
-        tournament.setStartDate(tournamentDetails.getStartDate());
-        tournament.setEndDate(tournamentDetails.getEndDate());
-        tournament.setCategory(categoryRepository.findById(tournamentDetails.getCategoryId()).orElseThrow(() -> new RuntimeException("Category not found")));
+        Tournament tournament = tournamentRepository.findById(id).orElseThrow(() -> new AppException("Tournament not found"));
+        buildTournamentEntity(tournamentDetails, tournament);
         return modelMapper.map(tournamentRepository.save(tournament), TournamentDto.class);
     }
 
@@ -88,21 +88,14 @@ public class AdminService {
     // Event management
     public EventDto createEvent(EventDto eventDto) {
         Event event = new Event();
-        event.setName(eventDto.getName());
-        event.setEventDate(eventDto.getEventDate());
-        event.setStatus(Enumerations.Event_Status.PENDING);
-        event.setType(eventDto.getType());
-        event.setTournament(tournamentRepository.findById(eventDto.getTournamentId()).orElseThrow(() -> new RuntimeException("Tournament not found")));
+        buildEventEntity(eventDto, event);
         return modelMapper.map(eventRepository.save(event), EventDto.class);
     }
 
     public EventDto updateEvent(Integer id, EventDto eventDetails) {
-        Event event = eventRepository.findById(id).orElseThrow(() -> new RuntimeException("Event not found"));
-        event.setName(eventDetails.getName());
-        event.setEventDate(eventDetails.getEventDate());
-        event.setStatus(Enumerations.Event_Status.PENDING);
-        event.setType(eventDetails.getType());
-        event.setTournament(tournamentRepository.findById(eventDetails.getTournamentId()).orElseThrow(() -> new RuntimeException("Tournament not found")));
+        Event event = eventRepository.findById(id).orElseThrow(() -> new AppException("Event not found"));
+        buildEventEntity(eventDetails, event);
+        event.setTournament(tournamentRepository.findById(eventDetails.getTournamentId()).orElseThrow(() -> new AppException("Tournament not found")));
         return modelMapper.map(eventRepository.save(event), EventDto.class);
     }
 
@@ -111,17 +104,14 @@ public class AdminService {
     }
 
     // Outcome management
-    public OutcomeDto createOutcome(OutcomeDto outcomeDto) {
+    public OutcomeDto createOutcome(CreateOutcomeRequest createOutcomeRequest) {
         Outcome outcome = new Outcome();
-        outcome.setDescription(outcomeDto.getDescription());
-        outcome.setOdds(outcomeDto.getOdds());
-        outcome.setEvent(eventRepository.findById(outcomeDto.getEventId()).orElseThrow(() -> new RuntimeException("Event not found")));
+        buildOutcomeEntity(createOutcomeRequest, outcome);
         return modelMapper.map(outcomeRepository.save(outcome), OutcomeDto.class);
     }
 
     public OutcomeDto updateOutcome(Long id, OutcomeDto outcomeDetails) {
-        Outcome outcome = outcomeRepository.findById(id).orElseThrow(() -> new RuntimeException("Outcome not found"));
-        outcome.setDescription(outcomeDetails.getDescription());
+        Outcome outcome = outcomeRepository.findById(id).orElseThrow(() -> new AppException("Outcome not found"));
         outcome.setOdds(outcomeDetails.getOdds());
         return modelMapper.map(outcomeRepository.save(outcome), OutcomeDto.class);
     }
@@ -151,6 +141,48 @@ public class AdminService {
         return categoryRepository.findByGameId(gameId).stream()
                 .map((element) -> modelMapper.map(element, CategoryDto.class))
                 .toList();
+    }
+
+    private void buildOutcomeEntity(CreateOutcomeRequest createOutcomeRequest, Outcome outcome) {
+        Event event = eventRepository.findById(createOutcomeRequest.getEventId()).orElseThrow(() -> new AppException("Event not found"));
+
+        Map<Integer, Housemate> housemates = housemateRepository.findHousematesByIdIn(createOutcomeRequest.getHouseIds()).stream()
+                .collect(Collectors.toMap(Housemate::getId, housemate -> housemate));
+
+        if (housemates.size() != createOutcomeRequest.getHouseIds().size()) {
+            throw new AppException("Housemate not found");
+        }
+
+        if (event.getEventTypeTemplate().getHousemateNum() != createOutcomeRequest.getHouseIds().size()) {
+            throw new AppException("Housemate number does not match");
+        }
+
+        String description = event.getEventTypeTemplate().getTemplate();
+        for (int i = 1; i <= event.getEventTypeTemplate().getHousemateNum(); i++) {
+            description = description.replace("{" + i + "}", housemates.get(createOutcomeRequest.getHouseIds().get(i - 1)).getName());
+        }
+        outcome.setDescription(description);
+        outcome.setOdds(BigDecimal.valueOf(createOutcomeRequest.getOdds()));
+        outcome.setEvent(event);
+    }
+
+    private void buildTournamentEntity(TournamentDto tournamentDto, Tournament tournament) {
+        tournament.setName(tournamentDto.getName());
+        tournament.setStartDate(tournamentDto.getStartDate());
+        tournament.setEndDate(tournamentDto.getEndDate());
+        tournament.setCategory(categoryRepository.findById(tournamentDto.getCategoryId()).orElseThrow(() -> new AppException("Category not found")));
+    }
+
+    private void buildEventEntity(EventDto eventDto, Event event) {
+        EventTypeTemplate eventTypeTemplate = eventTypeTemplateRepository
+                .findById(eventDto.getEventTypeTemplateId())
+                .orElseThrow(() -> new AppException("Event type template not found"));
+        event.setName(eventDto.getName());
+        event.setEventDate(eventDto.getEventDate());
+        event.setStatus(Enumerations.Event_Status.PENDING);
+        event.setType(eventDto.getType());
+        event.setEventTypeTemplate(eventTypeTemplate);
+        event.setTournament(tournamentRepository.findById(eventDto.getTournamentId()).orElseThrow(() -> new AppException("Tournament not found")));
     }
 }
 

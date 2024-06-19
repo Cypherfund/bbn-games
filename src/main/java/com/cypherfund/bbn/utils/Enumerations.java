@@ -38,4 +38,8 @@ public class Enumerations {
         ACTIVE, INACTIVE
     }
 
+
+    public enum USER_STATUS {
+        active, blocked, suspended, disabled
+    }
 }

@@ -44,6 +44,10 @@ public class Event {
     @JoinColumn(name = "tournament_id")
     private Tournament tournament;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "event_type_template_id")
+    private EventTypeTemplate eventTypeTemplate;
+
     @Override
     public String toString() {
         return this.id + " - " + this.name ;

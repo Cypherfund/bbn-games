@@ -3,6 +3,7 @@ package com.cypherfund.bbn.services.impl;
 import com.cypherfund.bbn.dao.entity.*;
 import com.cypherfund.bbn.dao.repository.*;
 import com.cypherfund.bbn.utils.Enumerations;
+import com.cypherfund.bbn.exception.AppException;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class JackpotService {
 
     @Transactional
     public void settleJackpot(Integer jackpotId) {
-        Jackpot jackpot = jackpotRepository.findById(jackpotId).orElseThrow(() -> new RuntimeException("Jackpot not found"));
+        Jackpot jackpot = jackpotRepository.findById(jackpotId).orElseThrow(() -> new AppException("Jackpot not found"));
         calculateJackpotWinnings(jackpot);
     }
 

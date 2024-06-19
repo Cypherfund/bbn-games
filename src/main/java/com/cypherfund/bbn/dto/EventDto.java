@@ -14,6 +14,7 @@ import java.time.Instant;
 public class EventDto implements Serializable {
     Integer id;
     String name;
+    private Integer eventTypeTemplateId;
     Enumerations.EVENT_TYPE type;
     String outcome;
     Enumerations.Event_Status status;

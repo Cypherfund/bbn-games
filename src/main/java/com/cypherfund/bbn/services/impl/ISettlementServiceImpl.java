@@ -2,7 +2,7 @@ package com.cypherfund.bbn.services.impl;
 
 import com.cypherfund.bbn.dao.entity.*;
 import com.cypherfund.bbn.dao.repository.*;
-import com.cypherfund.bbn.services.contract.IBettingService;
+import com.cypherfund.bbn.exception.AppException;
 import com.cypherfund.bbn.services.contract.ISettlementService;
 import com.cypherfund.bbn.utils.Enumerations;
 import lombok.RequiredArgsConstructor;
@@ -35,8 +35,8 @@ public class ISettlementServiceImpl implements ISettlementService {
     @Transactional
     public void processWinningsOdds(Integer eventId, Integer winningOutcomeId) {
         log.info("Processing winnings for event {}", eventId);
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
-        housemateRepository.findById(winningOutcomeId).orElseThrow(() -> new RuntimeException("Housemate not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new AppException("Event not found"));
+        housemateRepository.findById(winningOutcomeId).orElseThrow(() -> new AppException("Housemate not found"));
 
         event.setOutcome(winningOutcomeId.toString());
         event.setStatus(SETTLED);
@@ -60,7 +60,7 @@ public class ISettlementServiceImpl implements ISettlementService {
     @Override
     @Transactional
     public void handleEventVoid(Integer eventId) {
-        Event event = eventRepository.findById(eventId).orElseThrow(() -> new RuntimeException("Event not found"));
+        Event event = eventRepository.findById(eventId).orElseThrow(() -> new AppException("Event not found"));
         event.setStatus(Enumerations.Event_Status.CANCELLED);
 
         List<BetItem> betItems = betItemRepository.findByEvent(eventId);
@@ -96,11 +96,11 @@ public class ISettlementServiceImpl implements ISettlementService {
 
     @Override
     public void confirmWinnings(Integer eventId, Integer winningOutcomeId) {
-//        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new RuntimeException("Ticket not found"));
+//        Ticket ticket = ticketRepository.findById(ticketId).orElseThrow(() -> new AppException("Ticket not found"));
 //        if ("won".equals(ticket.getStatus())) {
 //            WinningTicket winningTicket = winningTicketRepository.findByTicketId(ticketId)
-//                    .orElseThrow(() -> new RuntimeException("Winning ticket not found"));
-//            User user = userRepository.findById(ticket.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+//                    .orElseThrow(() -> new AppException("Winning ticket not found"));
+//            User user = userRepository.findById(ticket.getUserId()).orElseThrow(() -> new AppException("User not found"));
 //            user.setBalance(user.getBalance().add(winningTicket.getFinalWinnings()));
 //            userRepository.save(user);
 //

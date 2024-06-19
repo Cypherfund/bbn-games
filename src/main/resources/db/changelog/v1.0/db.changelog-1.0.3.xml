@@ -4,7 +4,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
     <!-- Insert 22 sample housemates from past seasons -->
-    <changeSet id="insert-sample-housemates" author="Ngai Elizabeth">
+    <changeSet id="insert-sample-housemates" author="Ngai Elizabeth" context="test">
         <insert tableName="housemates">
             <column name="id" value="1"/>
             <column name="name" value="Efe Ejeba"/>
@@ -161,6 +161,52 @@
         </insert>
     </changeSet>
 
+    <changeSet id="insert event type template data" author="Ngai Elizabeth" context="test">
+        <insert tableName="event_type_template">
+            <column name="id" value="1"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="template" value="{1} will be nominated this week"/>
+            <column name="description" value="Predict the housemate that will be nominated this week"/>
+            <column name="housemate_num" value="1"/>
+        </insert>
+        <insert tableName="event_type_template">
+            <column name="id" value="2"/>
+            <column name="type" value="EVICTIONS"/>
+            <column name="template" value="{1} will be evicted"/>
+            <column name="description" value="Predict the housemate that will be evicted this week"/>
+            <column name="housemate_num" value="1"/>
+        </insert>
+        <insert tableName="event_type_template">
+            <column name="id" value="3"/>
+            <column name="type" value="HEAD_OF_HOUSE"/>
+            <column name="template" value="{1} will be the Head of House"/>
+            <column name="description" value="Predict the housemate that will be the Head of House this week"/>
+            <column name="housemate_num" value="1"/>
+        </insert>
+        <insert tableName="event_type_template">
+            <column name="id" value="4"/>
+            <column name="type" value="WINNER"/>
+            <column name="template" value="{1} will be the ultimate winner"/>
+            <column name="description" value="Predict the housemate that will be the ultimate winner"/>
+            <column name="housemate_num" value="1"/>
+        </insert>
+        <insert tableName="event_type_template">
+            <column name="id" value="5"/>
+            <column name="type" value="DISQUALIFICATION"/>
+            <column name="template" value="{1} will be disqualified"/>
+            <column name="description" value="Predict the housemate that will be disqualified"/>
+            <column name="housemate_num" value="1"/>
+        </insert>
+
+        <insert tableName="event_type_template">
+            <column name="id" value="6"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="template" value="{1} and {2} will be nominated this week"/>
+            <column name="description" value="Predict the housemates that will be nominated this week"/>
+            <column name="housemate_num" value="2"/>
+        </insert>
+    </changeSet>
+
     <!-- Insert initial data into the tables -->
     <changeSet id="insert sample data for testing" author="Ngai Elizabeth" context="test">
         <!-- Insert Game -->
@@ -199,6 +245,7 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Week 1 Nominations"/>
             <column name="type" value="NOMINATIONS"/>
+            <column name="event_type_template_id" value="1"/>
             <column name="event_date" value="2024-07-25 20:00:00"/>
         </insert>
         <insert tableName="event">
@@ -206,6 +253,7 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Week 2 Nominations"/>
             <column name="type" value="NOMINATIONS"/>
+            <column name="event_type_template_id" value="1"/>
             <column name="event_date" value="2024-08-01 20:00:00"/>
         </insert>
         <insert tableName="event">
@@ -213,6 +261,7 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Week 1 Eviction"/>
             <column name="type" value="EVICTIONS"/>
+            <column name="event_type_template_id" value="2"/>
             <column name="event_date" value="2024-07-28 20:00:00"/>
         </insert>
         <insert tableName="event">
@@ -220,6 +269,7 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Week 2 Eviction"/>
             <column name="type" value="EVICTIONS"/>
+            <column name="event_type_template_id" value="2"/>
             <column name="event_date" value="2024-08-04 20:00:00"/>
         </insert>
         <insert tableName="event">
@@ -227,6 +277,7 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Head of House Week 1"/>
             <column name="type" value="HEAD_OF_HOUSE"/>
+            <column name="event_type_template_id" value="3"/>
             <column name="event_date" value="2024-07-26 20:00:00"/>
         </insert>
         <insert tableName="event">
@@ -234,6 +285,7 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Ultimate Winner"/>
             <column name="type" value="WINNER"/>
+            <column name="event_type_template_id" value="4"/>
             <column name="event_date" value="2024-09-01 20:00:00"/>
         </insert>
         <insert tableName="event">
@@ -241,7 +293,17 @@
             <column name="tournament_id" value="1"/>
             <column name="name" value="Housemate Disqualified"/>
             <column name="type" value="DISQUALIFICATION"/>
+            <column name="event_type_template_id" value="5"/>
             <column name="event_date" value="2024-09-01 20:00:00"/>
+        </insert>
+
+        <insert tableName="event">
+            <column name="id" value="8"/>
+            <column name="tournament_id" value="1"/>
+            <column name="name" value="Week 1 Nominations"/>
+            <column name="type" value="NOMINATIONS"/>
+            <column name="event_type_template_id" value="6"/>
+            <column name="event_date" value="2024-07-25 20:00:00"/>
         </insert>
 
         <!-- Insert Outcomes for BBNaija Season 3 Events -->
@@ -382,6 +444,25 @@
             <column name="id" value="21"/>
             <column name="event_id" value="7"/>
             <column name="description" value="Housemate C will be eliminated"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+
+        <insert tableName="outcome">
+            <column name="id" value="22"/>
+            <column name="event_id" value="8"/>
+            <column name="description" value="Housemate A and Housemate B will be nominated this week"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="23"/>
+            <column name="event_id" value="8"/>
+            <column name="description" value="Housemate A and Housemate C will be nominated this week"/>
+            <column name="odds" value="1.5"/>
+        </insert>
+        <insert tableName="outcome">
+            <column name="id" value="24"/>
+            <column name="event_id" value="8"/>
+            <column name="description" value="Housemate B and Housemate C will be nominated this week"/>
             <column name="odds" value="1.5"/>
         </insert>
     </changeSet>

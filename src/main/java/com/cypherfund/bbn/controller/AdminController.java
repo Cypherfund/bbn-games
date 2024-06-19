@@ -10,6 +10,7 @@ import com.cypherfund.bbn.dto.CategoryDto;
 import com.cypherfund.bbn.dto.EventDto;
 import com.cypherfund.bbn.dto.OutcomeDto;
 import com.cypherfund.bbn.dto.TournamentDto;
+import com.cypherfund.bbn.models.CreateOutcomeRequest;
 import com.cypherfund.bbn.services.impl.AdminService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -103,8 +104,8 @@ public class AdminController {
 
     // Outcome endpoints
     @PostMapping("/outcomes")
-    public ResponseEntity<OutcomeDto> createOutcome(@RequestBody @Valid OutcomeDto outcome) {
-        return ResponseEntity.ok(adminService.createOutcome(outcome));
+    public ResponseEntity<OutcomeDto> createOutcome(@RequestBody @Valid CreateOutcomeRequest outcomeRequest) {
+        return ResponseEntity.ok(adminService.createOutcome(outcomeRequest));
     }
 
     @PutMapping("/outcomes/{id}")

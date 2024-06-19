@@ -95,4 +95,36 @@
             <column name="status" type="ENUM('ACTIVE', 'INACTIVE')"/>
         </addColumn>
     </changeSet>
+
+    <changeSet id="create event type template table" author="Ngai Elizabeth">
+        <createTable tableName="event_type_template">
+            <column name="id" type="INT" autoIncrement="true">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="type" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="template" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="description" type="VARCHAR(255)">
+                <constraints nullable="false"/>
+            </column>
+            <column name="housemate_num" type="INT">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+    </changeSet>
+
+    <changeSet id="add event_type_template_id to event table" author="Ngai Elizabeth">
+        <addColumn tableName="event">
+            <column name="event_type_template_id" type="INT"/>
+        </addColumn>
+        <addForeignKeyConstraint constraintName="fk_event_event_type_template"
+                                 baseTableName="event"
+                                 baseColumnNames="event_type_template_id"
+                                 referencedTableName="event_type_template"
+                                 referencedColumnNames="id"/>
+    </changeSet>
+
 </databaseChangeLog>
