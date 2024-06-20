@@ -3,6 +3,7 @@ package com.cypherfund.bbn.services.impl;
 import com.cypherfund.bbn.dao.entity.*;
 import com.cypherfund.bbn.dao.repository.*;
 import com.cypherfund.bbn.exception.AppException;
+import com.cypherfund.bbn.proxies.UserFeignClient;
 import com.cypherfund.bbn.services.contract.ISettlementService;
 import com.cypherfund.bbn.utils.Enumerations;
 import lombok.RequiredArgsConstructor;
@@ -29,6 +30,7 @@ public class ISettlementServiceImpl implements ISettlementService {
     private final WinningTicketRepository winningTicketRepository;
     private final JackpotEventRepository jackpotEventRepository;
     private final JackpotRepository jackpotRepository;
+    private final UserFeignClient userFeignClient;
     private static final BigDecimal TAX_RATE = new BigDecimal("0.1"); // 10% tax
 
     @Override
@@ -60,6 +62,7 @@ public class ISettlementServiceImpl implements ISettlementService {
     @Override
     @Transactional
     public void handleEventVoid(Integer eventId) {
+        //todo properly handle voids to not only recalculate winnings but also call credit user's balance and reverse already credited winnings
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new AppException("Event not found"));
         event.setStatus(Enumerations.Event_Status.CANCELLED);
 
@@ -150,7 +153,14 @@ public class ISettlementServiceImpl implements ISettlementService {
                 boolean allItemsWon = betItemsForBet.stream().allMatch(item -> WON.equals(item.getStatus()));
                 bet.setStatus(allItemsWon ? WON : LOST);
                 betsToSave.add(bet);
-                createWinningTicket(bet);
+                if (allItemsWon) {
+                    createWinningTicket(bet);
+                    userFeignClient.creditWinning(
+                            bet.getFinalWinnings().doubleValue(),
+                            bet.getTicket().getUserId(),
+                            bet.getId().toString().concat(" - ").concat(bet.getTicket().getType().name())
+                    );
+                }
             }
         }
 

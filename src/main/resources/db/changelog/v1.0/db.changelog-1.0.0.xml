@@ -147,18 +147,6 @@
         </createTable>
     </changeSet>
 
-    <changeSet id="create table for record transactions" author="Ngai Elizabeth">
-        <createTable tableName="transactions">
-            <column name="id" type="INT" autoIncrement="true">
-                <constraints primaryKey="true" nullable="false"/>
-            </column>
-            <column name="user_id" type="INT"/>
-            <column name="type" type="ENUM('BET', 'WINNING')"/>
-            <column name="amount" type="DECIMAL(10,2)"/>
-            <column name="created_at" type="TIMESTAMP" defaultValueComputed="CURRENT_TIMESTAMP"/>
-        </createTable>
-    </changeSet>
-
     <changeSet id="create audit log table" author="Ngai Elizabeth">
         <createTable tableName="audit_log">
             <column name="id" type="BIGINT" autoIncrement="true">

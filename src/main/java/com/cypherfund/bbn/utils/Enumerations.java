@@ -42,4 +42,8 @@ public class Enumerations {
     public enum USER_STATUS {
         active, blocked, suspended, disabled
     }
+
+    public enum TRANSACTION_TYPE {
+        BB_BET, BB_WINNING, WITHDRAWAL, DEPOSIT, SUBSCRIPTION
+    }
 }

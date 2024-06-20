@@ -2,6 +2,7 @@ package com.cypherfund.bbn.services.impl;
 
 import com.cypherfund.bbn.dao.entity.*;
 import com.cypherfund.bbn.dao.repository.*;
+import com.cypherfund.bbn.proxies.UserFeignClient;
 import com.cypherfund.bbn.utils.Enumerations;
 import com.cypherfund.bbn.exception.AppException;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class JackpotService {
     private final WinningTicketRepository winningTicketRepository;
     private final JackpotRuleRepository jackpotRuleRepository;
     private final BetRepository betRepository;
+    private final UserFeignClient userFeignClient;
 
     @Transactional
     public void settleJackpot(Integer jackpotId) {
@@ -99,6 +101,14 @@ public class JackpotService {
         }
 
         winningTicketRepository.saveAll(winningTickets);
+
+        for ( Bet bet: winningBets) {
+            userFeignClient.creditWinning(
+                    bet.getFinalWinnings().doubleValue(),
+                    bet.getTicket().getUserId(),
+                    bet.getId().toString().concat(" - ").concat(bet.getTicket().getType().name())
+            );
+        }
     }
 
     private WinningTicket buildWinningTicket(BigDecimal winningAmount, BigDecimal taxAmount, BigDecimal finalWinnings, Bet bet) {

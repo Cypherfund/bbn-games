@@ -6,8 +6,13 @@ import com.cypherfund.bbn.dao.entity.Ticket;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;
 import com.cypherfund.bbn.dao.repository.TicketRepository;
+import com.cypherfund.bbn.exception.AppException;
+import com.cypherfund.bbn.models.ApiResponse;
+import com.cypherfund.bbn.models.DebitRequest;
 import com.cypherfund.bbn.models.PredictionRequest;
+import com.cypherfund.bbn.proxies.UserFeignClient;
 import com.cypherfund.bbn.services.contract.IBettingService;
+import com.cypherfund.bbn.utils.Enumerations;
 import com.cypherfund.bbn.utils.Enumerations.BetStatus;
 import com.cypherfund.bbn.utils.Enumerations.TicketStatus;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +31,7 @@ public class IBettingServiceImpl implements IBettingService {
     private final TicketRepository ticketRepository;
     private final BetRepository betRepository;
     private final BetItemRepository betItemRepository;
+    private final UserFeignClient userFeignClient;
     private static final BigDecimal TAX_RATE = new BigDecimal("0.1"); // 10% tax
 
     @Override
@@ -72,6 +78,18 @@ public class IBettingServiceImpl implements IBettingService {
             }
         }
 
+        //debit user account
+        DebitRequest debitRequest = new DebitRequest();
+        debitRequest.setUserId(predictionRequest.getUserId());
+        debitRequest.setAmount(ticket.getTotalAmount().doubleValue());
+        debitRequest.setTransactionType(Enumerations.TRANSACTION_TYPE.BB_BET);
+        debitRequest.setReference(ticket.getId().toString().concat(" - ").concat(ticket.getType().name()));
+
+        ApiResponse<String> response = userFeignClient.play(debitRequest);
+
+        if (!response.getSuccess()) {
+            throw new AppException(response.getMessage());
+        }
     }
 
     private BigDecimal calculateTotalAmount(List<PredictionRequest.Bet> bets) {
