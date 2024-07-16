@@ -1,6 +1,7 @@
 package com.cypherfund.bbn.dao.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -28,5 +29,9 @@ public class Tournament {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "category_id", nullable = false)
     private Category category;
+
+    @Size(max = 255)
+    @Column(name = "img_url")
+    private String imgUrl;
 
 }

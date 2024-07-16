@@ -3,6 +3,28 @@
                    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-4.3.xsd">
 
+    <changeSet id="add_img_url_to_tournament" author="Ngai Elizabeth">
+        <addColumn tableName="tournament">
+            <column name="img_url" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 
+    <changeSet id="add_img_url_to_game" author="Ngai Elizabeth">
+        <addColumn tableName="game">
+            <column name="img_url" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add_img_url_to_category" author="Ngai Elizabeth">
+        <addColumn tableName="category">
+            <column name="img_url" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
+
+    <changeSet id="add_img_url_to_outcome" author="Ngai Elizabeth">
+        <addColumn tableName="outcome">
+            <column name="img_url" type="VARCHAR(255)"/>
+        </addColumn>
+    </changeSet>
 
 </databaseChangeLog>

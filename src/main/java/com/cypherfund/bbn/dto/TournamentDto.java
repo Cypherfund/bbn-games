@@ -1,5 +1,6 @@
 package com.cypherfund.bbn.dto;
 
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Value;
 
@@ -11,6 +12,8 @@ import java.time.LocalDate;
  */
 @Data
 public class TournamentDto implements Serializable {
+    @Size(max = 255)
+    private String imgUrl;
     Long id;
     String name;
     LocalDate startDate;

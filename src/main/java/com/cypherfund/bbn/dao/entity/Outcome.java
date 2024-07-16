@@ -1,6 +1,7 @@
 package com.cypherfund.bbn.dao.entity;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -25,5 +26,9 @@ public class Outcome {
 
     @Column(name = "odds", precision = 10, scale = 2)
     private BigDecimal odds;
+
+    @Size(max = 255)
+    @Column(name = "img_url")
+    private String imgUrl;
 
 }

@@ -1,5 +1,6 @@
 package com.cypherfund.bbn.dto;
 
+import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.Value;
 
@@ -12,6 +13,8 @@ import java.math.BigDecimal;
 @Data
 public class OutcomeDto implements Serializable {
     Long id;
+    @Size(max = 255)
+    private String imgUrl;
     Integer eventId;
     String description;
     BigDecimal odds;
