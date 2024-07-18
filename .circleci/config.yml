@@ -45,7 +45,7 @@ jobs:
       - run:
           name: Build Image
           command: |
-            chmod +x mvnw && ./mvnw compile jib:build -Dimage=${DOCKER_REGISTRY}/${REGISTRY_USER}/bbn:bbn_backend<< pipeline.number >>_${CIRCLE_SHA1}
+            chmod +x mvnw && ./mvnw compile jib:build -Dimage=${DOCKER_REGISTRY}/${REGISTRY_USER}/bbn-frontend:bbn_backend<< pipeline.number >>_${CIRCLE_SHA1}
 
   deploy:
     machine:
