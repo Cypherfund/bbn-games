@@ -7,7 +7,10 @@ import com.cypherfund.bbn.dao.repository.AuditLogRepository;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;
 import com.cypherfund.bbn.dao.repository.TicketRepository;
+import com.cypherfund.bbn.models.ApiResponse;
+import com.cypherfund.bbn.models.DebitRequest;
 import com.cypherfund.bbn.models.PredictionRequest;
+import com.cypherfund.bbn.proxies.UserFeignClient;
 import com.cypherfund.bbn.utils.Enumerations;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -36,6 +39,8 @@ class IBettingServiceImplTest {
     @Mock
     private BetItemRepository betItemRepository;
     @Mock
+    private UserFeignClient userFeignClient;
+    @Mock
     private AuditLogRepository auditLogRepository;
 
     @InjectMocks
@@ -47,7 +52,7 @@ class IBettingServiceImplTest {
     void setUp() {
         PredictionRequest.Bet.Event event1 = new PredictionRequest.Bet.Event();
         event1.setEventId(1L);
-        event1.setPrediction("Team A");
+        event1.setPrediction(1L);
         event1.setOdds(new BigDecimal("2.0"));
 
         PredictionRequest.Bet bet1 = new PredictionRequest.Bet();
@@ -65,6 +70,9 @@ class IBettingServiceImplTest {
     void placeBet() {
         Ticket savedTicket = new Ticket();
         savedTicket.setId(1L);
+        savedTicket.setTotalAmount(new BigDecimal("100.0"));
+        savedTicket.setTotalOdds(new BigDecimal("2.0"));
+        savedTicket.setType(Enumerations.TicketType.ODDS);
         when(ticketRepository.save(any(Ticket.class))).thenReturn(savedTicket);
 
         Bet savedBet = new Bet();
@@ -74,6 +82,9 @@ class IBettingServiceImplTest {
         BetItem savedBetItem = new BetItem();
         savedBetItem.setId(1L);
         when(betItemRepository.save(any(BetItem.class))).thenReturn(savedBetItem);
+
+        ApiResponse<String> response =  ApiResponse.success("Bet placed successfully");
+        when(userFeignClient.play(any(DebitRequest.class))).thenReturn(response);
 
         bettingService.placeBet(predictionRequest);
 
