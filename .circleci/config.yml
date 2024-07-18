@@ -1,0 +1,93 @@
+version: 2.1
+orbs:
+  docker: circleci/docker@2.4.0
+
+jobs:
+  verify:
+    docker:
+      - image: ghcr.io/graalvm/jdk:ol8-java17-22.3.1
+    steps:
+      - checkout
+      - run:
+          name: Code Verification
+          command: chmod +x mvnw && ./mvnw verify -DskipTests
+
+  test:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
+      - checkout
+      - run:
+          name: Start mysql test db
+          command: |
+            docker images
+            docker run -d --name test-db -e MYSQL_ROOT_PASSWORD=rootadmin -e MYSQL_DATABASE=course-test -p 3306:3306 mysql:latest
+      - run:
+          name: Run Unit Tests
+          command: chmod +x mvnw && ./mvnw test
+      - store_test_results:
+          path: target/surefire-reports
+
+  build_and_push_image:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
+      - checkout
+      - docker/check:
+          docker-password: REGISTRY_PASSWORD
+          docker-username: REGISTRY_USER
+          registry: ${DOCKER_REGISTRY}
+      - run:
+          name: Start mysql test db
+          command: |
+            docker images
+            docker run -d --name test-db -e MYSQL_ROOT_PASSWORD=rootadmin -e MYSQL_DATABASE=bbn -p 3306:3306 mysql:latest
+      - run:
+          name: Build Image
+          command: |
+            chmod +x mvnw && ./mvnw compile jib:build -Dimage=${DOCKER_REGISTRY}/${REGISTRY_USER}/bbn:bbn_backend<< pipeline.number >>_${CIRCLE_SHA1}
+
+  deploy:
+    machine:
+      image: ubuntu-2204:2022.04.2
+    steps:
+      - add_ssh_keys:
+          fingerprints: ["9b:c3:18:8c:43:0e:5e:1e:05:73:e4:5c:57:84:ec:99"]
+      - run:
+          name: checkout helm chart repository
+          command: |
+            git clone git@github.com:Cypherfund/helm-charts.git -b main
+            cd helm-charts && ls -la
+      - run:
+          name: update values file
+          command: |
+              cd helm-charts
+              sed -i "s/tag:.*/tag: backend_<< pipeline.number >>_${CIRCLE_SHA1}/g" games-charts/bbn-frontend/values.yaml
+              cat games-charts/bbn-frontend/values.yaml
+              git add games-charts/bbn-frontend/values.yaml
+      - run:
+          name: update build
+          command: |
+           cd helm-charts
+           git commit -m "update bbn-service image tag to bbn_backend<< pipeline.number >>_${CIRCLE_SHA1}"
+           git push origin main
+
+workflows:
+  version: 2
+  build_and_deploy:
+    jobs:
+      - verify
+      - test
+      - build_and_push_image:
+          requires:
+          - test
+          - verify
+      - deploy:
+         requires:
+         - build_and_push_image
+         filters:
+           branches:
+             only:
+             - main
+             - dev
+             - staging
