@@ -6,6 +6,8 @@ import com.cypherfund.bbn.dao.entity.Ticket;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;
 import com.cypherfund.bbn.dao.repository.TicketRepository;
+import com.cypherfund.bbn.dto.BetDto;
+import com.cypherfund.bbn.dto.TicketDto;
 import com.cypherfund.bbn.exception.AppException;
 import com.cypherfund.bbn.models.ApiResponse;
 import com.cypherfund.bbn.models.DebitRequest;
@@ -64,7 +66,7 @@ public class IBettingServiceImpl implements IBettingService {
                 newBet.setTaxAmount(BigDecimal.ZERO);
                 newBet.setFinalWinnings(BigDecimal.ZERO);
             }
-            betRepository.save(newBet);
+            newBet = betRepository.save(newBet);
 
             for (PredictionRequest.Bet.Event event : bet.getEvents()) {
                 BetItem betItem = new BetItem();
@@ -92,6 +94,40 @@ public class IBettingServiceImpl implements IBettingService {
         }
     }
 
+    public List<TicketDto> getUserTickets(String userId) {
+        List<Ticket> userTickets = ticketRepository.findByUserId(userId);
+        return userTickets.stream()
+                .map(ticket -> TicketDto.builder()
+                        .id(ticket.getId())
+                        .userId(ticket.getUserId())
+                        .type(ticket.getType())
+                        .totalAmount(ticket.getTotalAmount())
+                        .totalOdds(ticket.getTotalOdds())
+                        .status(ticket.getStatus())
+                        .correctPredictions(ticket.getCorrectPredictions())
+                        .createdAt(ticket.getCreatedAt())
+                        .updatedAt(ticket.getUpdatedAt())
+                        .bets(this.getTicketBets(ticket))
+                        .build())
+                .toList();
+    }
+
+    private List<BetDto> getTicketBets(Ticket ticket) {
+        List<Bet> bets = betRepository.findByTicketId(ticket.getId());
+        return bets.stream()
+                .map(bet -> BetDto.builder()
+                        .id(bet.getId())
+                        .betType(bet.getBetType())
+                        .status(bet.getStatus())
+                        .createdAt(bet.getCreatedAt())
+                        .updatedAt(bet.getUpdatedAt())
+                        .potentialWinnings(bet.getPotentialWinnings())
+                        .taxAmount(bet.getTaxAmount())
+                        .finalWinnings(bet.getFinalWinnings())
+                        .amount(bet.getAmount())
+                        .build())
+                .toList();
+    }
     private BigDecimal calculateTotalAmount(List<PredictionRequest.Bet> bets) {
         return bets.stream()
                 .map(PredictionRequest.Bet::getAmount)
