@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -122,7 +125,7 @@ public class AdminService {
 
     // Get events and outcomes by tournament
     public List<EventDto> getEventsByTournament(Long tournamentId) {
-        return eventRepository.findByTournamentId(tournamentId).stream()
+        return eventRepository.findByTournamentIdAndEventDateAfter(tournamentId, Instant.now()).stream()
                 .map((element) -> modelMapper.map(element, EventDto.class))
                 .toList();
     }
@@ -140,6 +143,13 @@ public class AdminService {
     public List<CategoryDto> gameCategories(long gameId) {
         return categoryRepository.findByGameId(gameId).stream()
                 .map((element) -> modelMapper.map(element, CategoryDto.class))
+                .toList();
+    }
+
+    public List<TournamentDto> getCategoryTournaments(long categoryId) {
+        return tournamentRepository.findAllByCategoryIdAndEndDateAfter(categoryId, LocalDate.now())
+                .stream()
+                .map(element -> modelMapper.map(element, TournamentDto.class))
                 .toList();
     }
 

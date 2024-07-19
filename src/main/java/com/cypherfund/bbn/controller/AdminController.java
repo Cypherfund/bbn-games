@@ -68,6 +68,11 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/categories/{categoryId}/tournaments")
+    public ResponseEntity<List<TournamentDto>> getTournamentsByCategory(@PathVariable Long categoryId) {
+        return ResponseEntity.ok(adminService.getCategoryTournaments(categoryId));
+    }
+
     // Tournament endpoints
     @PostMapping("/tournaments")
     public ResponseEntity<TournamentDto> createTournament(@RequestBody @Valid TournamentDto tournament) {
