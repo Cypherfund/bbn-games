@@ -232,11 +232,15 @@
             <column name="id" value="1"/>
             <column name="category_id" value="2"/>
             <column name="name" value="BBNaija Season 3"/>
+            <column name="start_date" value="2024-07-25 20:00:00"/>
+            <column name="end_date" value="2024-09-25 20:00:00"/>
         </insert>
         <insert tableName="tournament">
             <column name="id" value="2"/>
             <column name="category_id" value="1"/>
             <column name="name" value="Big Brother 237 Season 4"/>
+            <column name="start_date" value="2024-07-25 20:00:00"/>
+            <column name="end_date" value="2024-09-25 20:00:00"/>
         </insert>
 
         <!-- Insert Events for BBNaija Season 3 -->
