@@ -85,6 +85,11 @@ public class AdminController {
         return ResponseEntity.noContent().build();
     }
 
+    @GetMapping("/tournaments/{id}")
+    public ResponseEntity<TournamentDto> getTournamentById(@PathVariable Long id) {
+        return ResponseEntity.ok(adminService.getTournamentById(id));
+    }
+
     // Event endpoints
     @PostMapping("/events")
     public ResponseEntity<EventDto> createEvent(@RequestBody EventDto event) {
@@ -94,6 +99,11 @@ public class AdminController {
     @PutMapping("/events/{id}")
     public ResponseEntity<EventDto> updateEvent(@PathVariable Integer id, @RequestBody EventDto eventDetails) {
         return ResponseEntity.ok(adminService.updateEvent(id, eventDetails));
+    }
+
+    @GetMapping("/events/{id}")
+    public ResponseEntity<EventDto> getEventById(@PathVariable Integer id) {
+        return ResponseEntity.ok(adminService.getEventById(id));
     }
 
     @DeleteMapping("/events/{id}")

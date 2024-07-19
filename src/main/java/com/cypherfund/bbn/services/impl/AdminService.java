@@ -81,6 +81,10 @@ public class AdminService {
         return modelMapper.map(tournamentRepository.save(tournament), TournamentDto.class);
     }
 
+    public TournamentDto getTournamentById(Long id) {
+        return modelMapper.map(tournamentRepository.findById(id).orElseThrow(() -> new AppException("Tournament not found")), TournamentDto.class);
+    }
+
     public void deleteTournament(Long id) {
         tournamentRepository.deleteById(id);
     }
@@ -97,6 +101,10 @@ public class AdminService {
         buildEventEntity(eventDetails, event);
         event.setTournament(tournamentRepository.findById(eventDetails.getTournamentId()).orElseThrow(() -> new AppException("Tournament not found")));
         return modelMapper.map(eventRepository.save(event), EventDto.class);
+    }
+
+    public EventDto getEventById(Integer id) {
+        return modelMapper.map(eventRepository.findById(id).orElseThrow(() -> new AppException("Event not found")), EventDto.class);
     }
 
     public void deleteEvent(Integer id) {
@@ -184,5 +192,6 @@ public class AdminService {
         event.setEventTypeTemplate(eventTypeTemplate);
         event.setTournament(tournamentRepository.findById(eventDto.getTournamentId()).orElseThrow(() -> new AppException("Tournament not found")));
     }
+
 }
 
