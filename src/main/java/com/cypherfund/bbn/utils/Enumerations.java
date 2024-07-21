@@ -2,7 +2,7 @@ package com.cypherfund.bbn.utils;
 
 public class Enumerations {
     public enum BetType {
-        SINGLE, COMBINATION
+        SINGLE, MULTIPLE
     }
 
     public enum BetStatus {

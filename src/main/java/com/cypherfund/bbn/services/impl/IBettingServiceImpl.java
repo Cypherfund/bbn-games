@@ -47,6 +47,7 @@ public class IBettingServiceImpl implements IBettingService {
         ticket.setTotalOdds(calculateTotalOdds(predictionRequest.getBets()));
         ticket.setStatus(TicketStatus.PENDING);
         ticket.setCreatedAt(Instant.now());
+        ticket.setCorrectPredictions(0);
         ticket = ticketRepository.save(ticket);
 
         // Create bets and bet items
