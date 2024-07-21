@@ -62,9 +62,9 @@ jobs:
           name: update values file
           command: |
               cd helm-charts
-              sed -i "s/tag:.*/tag: backend_<< pipeline.number >>_${CIRCLE_SHA1}/g" games-charts/bbn-frontend/values.yaml
-              cat games-charts/bbn-frontend/values.yaml
-              git add games-charts/bbn-frontend/values.yaml
+              sed -i "s/tag:.*/tag: bbn_backend_<< pipeline.number >>_${CIRCLE_SHA1}/g" games-charts/bbn-service/values.yaml
+              cat games-charts/bbn-service/values.yaml
+              git add games-charts/bbn-service/values.yaml
       - run:
           name: update build
           command: |
