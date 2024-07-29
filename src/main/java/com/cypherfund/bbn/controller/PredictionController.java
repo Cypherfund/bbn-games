@@ -8,6 +8,7 @@ import com.cypherfund.bbn.services.contract.IBettingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -24,8 +25,8 @@ public class PredictionController {
     @GetMapping("/tickets/{userId}") //should also filter by date
     public List<BetDto> getUserTickets(@PathVariable String userId,
                                         @RequestParam(required = false) Integer jackpotId,
-                                        @RequestParam(required = false) String startDate,
-                                        @RequestParam(required = false) String endDate,
+                                        @RequestParam(required = false) Instant startDate,
+                                        @RequestParam(required = false) Instant endDate,
                                         @RequestParam(defaultValue = "0") int page,
                                         @RequestParam(defaultValue = "20") int size) {
         BetFilterCriteria betFilterCriteria = BetFilterCriteria.builder()

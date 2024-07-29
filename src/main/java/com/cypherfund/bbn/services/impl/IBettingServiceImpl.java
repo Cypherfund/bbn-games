@@ -2,7 +2,6 @@ package com.cypherfund.bbn.services.impl;
 
 import com.cypherfund.bbn.dao.entity.Bet;
 import com.cypherfund.bbn.dao.entity.BetItem;
-import com.cypherfund.bbn.dto.BetItemDto;
 import com.cypherfund.bbn.dao.entity.Ticket;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;

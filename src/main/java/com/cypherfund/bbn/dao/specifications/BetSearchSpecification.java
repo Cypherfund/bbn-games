@@ -22,11 +22,11 @@ public class BetSearchSpecification {
                 predicates.add(cb.equal(root.get("ticket").get("userId"), filterCriteria.getUserId()));
             }
 
-            if (filterCriteria.getStartDate() != null && !filterCriteria.getStartDate().isEmpty()) {
+            if (filterCriteria.getStartDate() != null) {
                 predicates.add(cb.greaterThanOrEqualTo(root.get("ticket").get("createdAt"), filterCriteria.getStartDate()));
             }
 
-            if (filterCriteria.getEndDate() != null && !filterCriteria.getEndDate().isEmpty() ) {
+            if (filterCriteria.getEndDate() != null) {
                 predicates.add(cb.lessThanOrEqualTo(root.get("ticket").get("createdAt"), filterCriteria.getEndDate()));
             }
 

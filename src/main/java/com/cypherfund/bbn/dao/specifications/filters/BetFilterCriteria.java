@@ -4,6 +4,8 @@ import com.cypherfund.bbn.utils.Enumerations;
 import lombok.Builder;
 import lombok.Getter;
 
+import java.time.Instant;
+
 /**
  * Author: E.Ngai
  * Date: 7/29/2024
@@ -13,8 +15,8 @@ import lombok.Getter;
 @Getter
 public class BetFilterCriteria {
     private String userId;
-    private String startDate;
-    private String endDate;
+    private Instant startDate;
+    private Instant endDate;
     private Integer jackpotId;
     Enumerations.BetType betType;
     Enumerations.BetStatus status;
