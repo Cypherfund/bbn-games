@@ -2,10 +2,13 @@ package com.cypherfund.bbn.services.impl;
 
 import com.cypherfund.bbn.dao.entity.Bet;
 import com.cypherfund.bbn.dao.entity.BetItem;
+import com.cypherfund.bbn.dao.entity.BetItemDto;
 import com.cypherfund.bbn.dao.entity.Ticket;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;
 import com.cypherfund.bbn.dao.repository.TicketRepository;
+import com.cypherfund.bbn.dao.specifications.BetSearchSpecification;
+import com.cypherfund.bbn.dao.specifications.filters.BetFilterCriteria;
 import com.cypherfund.bbn.dto.BetDto;
 import com.cypherfund.bbn.dto.TicketDto;
 import com.cypherfund.bbn.exception.AppException;
@@ -18,12 +21,18 @@ import com.cypherfund.bbn.utils.Enumerations;
 import com.cypherfund.bbn.utils.Enumerations.BetStatus;
 import com.cypherfund.bbn.utils.Enumerations.TicketStatus;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.cypherfund.bbn.utils.Enumerations.TicketType.ODDS;
 
@@ -95,27 +104,13 @@ public class IBettingServiceImpl implements IBettingService {
         }
     }
 
-    public List<TicketDto> getUserTickets(String userId) {
-        List<Ticket> userTickets = ticketRepository.findByUserId(userId);
-        return userTickets.stream()
-                .map(ticket -> TicketDto.builder()
-                        .id(ticket.getId())
-                        .userId(ticket.getUserId())
-                        .type(ticket.getType())
-                        .totalAmount(ticket.getTotalAmount())
-                        .totalOdds(ticket.getTotalOdds())
-                        .status(ticket.getStatus())
-                        .correctPredictions(ticket.getCorrectPredictions())
-                        .createdAt(ticket.getCreatedAt())
-                        .updatedAt(ticket.getUpdatedAt())
-                        .bets(this.getTicketBets(ticket))
-                        .build())
-                .toList();
-    }
-
-    private List<BetDto> getTicketBets(Ticket ticket) {
-        List<Bet> bets = betRepository.findByTicketId(ticket.getId());
-        return bets.stream()
+    @Override
+    public List<BetDto> getUserBets(BetFilterCriteria betFilterCriteria, int pageNum, int size) {
+        PageRequest pageRequest = PageRequest.of(pageNum, size);
+        Specification<Bet> specification = BetSearchSpecification.getBetCriteria(betFilterCriteria);
+        Page<Bet> page = betRepository.findAll(specification, pageRequest);
+        return page.getContent().stream()
+                .filter(Objects::nonNull)
                 .map(bet -> BetDto.builder()
                         .id(bet.getId())
                         .betType(bet.getBetType())
@@ -126,9 +121,23 @@ public class IBettingServiceImpl implements IBettingService {
                         .taxAmount(bet.getTaxAmount())
                         .finalWinnings(bet.getFinalWinnings())
                         .amount(bet.getAmount())
+                        .betItems(getBetItems(bet))
                         .build())
                 .toList();
     }
+
+    private static List<BetItemDto> getBetItems(Bet bet) {
+        return bet.getBetItems().stream()
+                .map(betItem -> BetItemDto.builder()
+                        .id(betItem.getId())
+                        .event(betItem.getEvent())
+                        .outcomeId(betItem.getOutcomeId())
+                        .odds(betItem.getOdds())
+                        .status(betItem.getStatus())
+                        .build())
+                .toList();
+    }
+
     private BigDecimal calculateTotalAmount(List<PredictionRequest.Bet> bets) {
         return bets.stream()
                 .map(PredictionRequest.Bet::getAmount)

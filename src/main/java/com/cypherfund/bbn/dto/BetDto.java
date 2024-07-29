@@ -1,6 +1,7 @@
 package com.cypherfund.bbn.dto;
 
 import com.cypherfund.bbn.dao.entity.Bet;
+import com.cypherfund.bbn.dao.entity.BetItemDto;
 import com.cypherfund.bbn.utils.Enumerations;
 import lombok.Builder;
 import lombok.Value;
@@ -8,6 +9,7 @@ import lombok.Value;
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.Instant;
+import java.util.List;
 
 /**
  * DTO for {@link Bet}
@@ -24,4 +26,5 @@ public class BetDto implements Serializable {
     BigDecimal taxAmount;
     BigDecimal finalWinnings;
     BigDecimal amount;
+    List<BetItemDto> betItems;
 }
