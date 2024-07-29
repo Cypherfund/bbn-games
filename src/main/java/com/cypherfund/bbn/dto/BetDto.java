@@ -1,7 +1,6 @@
 package com.cypherfund.bbn.dto;
 
 import com.cypherfund.bbn.dao.entity.Bet;
-import com.cypherfund.bbn.dao.entity.BetItemDto;
 import com.cypherfund.bbn.utils.Enumerations;
 import lombok.Builder;
 import lombok.Value;

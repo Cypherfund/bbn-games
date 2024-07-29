@@ -2,7 +2,7 @@ package com.cypherfund.bbn.services.impl;
 
 import com.cypherfund.bbn.dao.entity.Bet;
 import com.cypherfund.bbn.dao.entity.BetItem;
-import com.cypherfund.bbn.dao.entity.BetItemDto;
+import com.cypherfund.bbn.dto.BetItemDto;
 import com.cypherfund.bbn.dao.entity.Ticket;
 import com.cypherfund.bbn.dao.repository.BetItemRepository;
 import com.cypherfund.bbn.dao.repository.BetRepository;
@@ -10,7 +10,6 @@ import com.cypherfund.bbn.dao.repository.TicketRepository;
 import com.cypherfund.bbn.dao.specifications.BetSearchSpecification;
 import com.cypherfund.bbn.dao.specifications.filters.BetFilterCriteria;
 import com.cypherfund.bbn.dto.BetDto;
-import com.cypherfund.bbn.dto.TicketDto;
 import com.cypherfund.bbn.exception.AppException;
 import com.cypherfund.bbn.models.ApiResponse;
 import com.cypherfund.bbn.models.DebitRequest;
@@ -31,8 +30,6 @@ import java.math.BigDecimal;
 import java.time.Instant;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 import static com.cypherfund.bbn.utils.Enumerations.TicketType.ODDS;
 
@@ -121,19 +118,7 @@ public class IBettingServiceImpl implements IBettingService {
                         .taxAmount(bet.getTaxAmount())
                         .finalWinnings(bet.getFinalWinnings())
                         .amount(bet.getAmount())
-                        .betItems(getBetItems(bet))
-                        .build())
-                .toList();
-    }
-
-    private static List<BetItemDto> getBetItems(Bet bet) {
-        return bet.getBetItems().stream()
-                .map(betItem -> BetItemDto.builder()
-                        .id(betItem.getId())
-                        .event(betItem.getEvent())
-                        .outcomeId(betItem.getOutcomeId())
-                        .odds(betItem.getOdds())
-                        .status(betItem.getStatus())
+                        .betItems(betItemRepository.findByBetId(bet.getId()))
                         .build())
                 .toList();
     }
