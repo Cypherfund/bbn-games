@@ -3,6 +3,7 @@ package com.cypherfund.bbn.controller;
 
 import com.cypherfund.bbn.dao.specifications.filters.BetFilterCriteria;
 import com.cypherfund.bbn.dto.BetDto;
+import com.cypherfund.bbn.models.ApiResponse;
 import com.cypherfund.bbn.models.PredictionRequest;
 import com.cypherfund.bbn.services.contract.IBettingService;
 import lombok.RequiredArgsConstructor;
@@ -22,13 +23,13 @@ public class PredictionController {
         bettingService.placeBet(predictionRequest);
     }
 
-    @GetMapping("/tickets/{userId}") //should also filter by date
-    public List<BetDto> getUserTickets(@PathVariable String userId,
-                                        @RequestParam(required = false) Integer jackpotId,
-                                        @RequestParam(required = false) Instant startDate,
-                                        @RequestParam(required = false) Instant endDate,
-                                        @RequestParam(defaultValue = "0") int page,
-                                        @RequestParam(defaultValue = "20") int size) {
+    @GetMapping("/tickets/{userId}")
+    public ApiResponse<List<BetDto>> getUserTickets(@PathVariable String userId,
+                                                    @RequestParam(required = false) Integer jackpotId,
+                                                    @RequestParam(required = false) Instant startDate,
+                                                    @RequestParam(required = false) Instant endDate,
+                                                    @RequestParam(defaultValue = "0") int page,
+                                                    @RequestParam(defaultValue = "20") int size) {
         BetFilterCriteria betFilterCriteria = BetFilterCriteria.builder()
                 .userId(userId)
                 .startDate(startDate)

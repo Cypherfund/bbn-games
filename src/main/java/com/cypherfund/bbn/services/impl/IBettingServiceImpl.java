@@ -101,11 +101,11 @@ public class IBettingServiceImpl implements IBettingService {
     }
 
     @Override
-    public List<BetDto> getUserBets(BetFilterCriteria betFilterCriteria, int pageNum, int size) {
+    public ApiResponse<List<BetDto>> getUserBets(BetFilterCriteria betFilterCriteria, int pageNum, int size) {
         PageRequest pageRequest = PageRequest.of(pageNum, size);
         Specification<Bet> specification = BetSearchSpecification.getBetCriteria(betFilterCriteria);
         Page<Bet> page = betRepository.findAll(specification, pageRequest);
-        return page.getContent().stream()
+        List<BetDto> betDtoList = page.getContent().stream()
                 .filter(Objects::nonNull)
                 .map(bet -> BetDto.builder()
                         .id(bet.getId())
@@ -120,6 +120,8 @@ public class IBettingServiceImpl implements IBettingService {
                         .betItems(betItemRepository.findByBetId(bet.getId()))
                         .build())
                 .toList();
+
+        return ApiResponse.success(ApiResponse.buildPage(page), betDtoList);
     }
 
     private BigDecimal calculateTotalAmount(List<PredictionRequest.Bet> bets) {
