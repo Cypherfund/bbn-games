@@ -7,6 +7,7 @@ import com.cypherfund.bbn.models.ApiResponse;
 import com.cypherfund.bbn.models.PredictionRequest;
 import com.cypherfund.bbn.services.contract.IBettingService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -21,6 +22,7 @@ public class PredictionController {
     @PostMapping
     public void placebet(@RequestBody PredictionRequest predictionRequest) {
         bettingService.placeBet(predictionRequest);
+        ResponseEntity.ok();
     }
 
     @GetMapping("/tickets/{userId}")
