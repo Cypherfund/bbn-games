@@ -40,6 +40,10 @@ public class ISettlementServiceImpl implements ISettlementService {
         Event event = eventRepository.findById(eventId).orElseThrow(() -> new AppException("Event not found"));
         housemateRepository.findById(winningOutcomeId).orElseThrow(() -> new AppException("Housemate not found"));
 
+        if (SETTLED.equals(event.getStatus())) {
+            throw new AppException("Event already settled");
+        }
+
         event.setOutcome(winningOutcomeId.toString());
         event.setStatus(SETTLED);
 

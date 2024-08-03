@@ -21,7 +21,7 @@ public class SecurityConfig {
 
     private final String[] permittedResources = new String[]{"/favicon.ico"};
     private final String[] permittedApis = new String[]{
-            "/admin/**", "/bets/**"
+            "/admin/**", "/settlement/**"
 
     };
 
