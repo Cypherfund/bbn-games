@@ -6,7 +6,9 @@ import com.cypherfund.bbn.dto.BetDto;
 import com.cypherfund.bbn.models.ApiResponse;
 import com.cypherfund.bbn.models.PredictionRequest;
 import com.cypherfund.bbn.services.contract.IBettingService;
+import com.cypherfund.bbn.utils.Enumerations;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
@@ -21,6 +23,7 @@ public class PredictionController {
     @PostMapping
     public void placebet(@RequestBody PredictionRequest predictionRequest) {
         bettingService.placeBet(predictionRequest);
+        ResponseEntity.ok();
     }
 
     @GetMapping("/tickets/{userId}")
@@ -28,12 +31,14 @@ public class PredictionController {
                                                     @RequestParam(required = false) Integer jackpotId,
                                                     @RequestParam(required = false) Instant startDate,
                                                     @RequestParam(required = false) Instant endDate,
+                                                    @RequestParam(required = false) Enumerations.BetStatus status,
                                                     @RequestParam(defaultValue = "0") int page,
                                                     @RequestParam(defaultValue = "20") int size) {
         BetFilterCriteria betFilterCriteria = BetFilterCriteria.builder()
                 .userId(userId)
                 .startDate(startDate)
                 .endDate(endDate)
+                .status(status)
                 .jackpotId(jackpotId)
                 .build();
         return bettingService.getUserBets(betFilterCriteria, page, size);

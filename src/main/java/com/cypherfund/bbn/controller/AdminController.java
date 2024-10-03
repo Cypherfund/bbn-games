@@ -6,12 +6,14 @@ package com.cypherfund.bbn.controller;
  * Time: 1:23 PM
  **/
 import com.cypherfund.bbn.dao.entity.Game;
+import com.cypherfund.bbn.dao.specifications.filters.EventFilterCriteria;
 import com.cypherfund.bbn.dto.CategoryDto;
 import com.cypherfund.bbn.dto.EventDto;
 import com.cypherfund.bbn.dto.OutcomeDto;
 import com.cypherfund.bbn.dto.TournamentDto;
 import com.cypherfund.bbn.models.CreateOutcomeRequest;
 import com.cypherfund.bbn.services.impl.AdminService;
+import com.cypherfund.bbn.utils.Enumerations;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -136,8 +138,14 @@ public class AdminController {
 
     // Get events and outcomes
     @GetMapping("/tournaments/{tournamentId}/events")
-    public ResponseEntity<List<EventDto>> getEventsByTournament(@PathVariable Long tournamentId) {
-        return ResponseEntity.ok(adminService.getEventsByTournament(tournamentId));
+    public ResponseEntity<List<EventDto>> getEventsByTournament(@PathVariable Long tournamentId,
+                                                                @RequestParam(required = false) Enumerations.Event_Status status) {
+        EventFilterCriteria eventFilterCriteria = EventFilterCriteria.builder()
+                .tournamentId(tournamentId)
+                .status(status)
+                .build();
+
+        return ResponseEntity.ok(adminService.getEventsByTournament(eventFilterCriteria));
     }
 
     @GetMapping("/events/{eventId}/outcomes")

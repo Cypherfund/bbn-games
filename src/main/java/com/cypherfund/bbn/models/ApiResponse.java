@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 @Setter
 @AllArgsConstructor
 public class ApiResponse<T> {
-    private Boolean success;
+    private boolean success;
     private String message;
     private T data;
     private CustomPage page;

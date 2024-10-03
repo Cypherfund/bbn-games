@@ -95,7 +95,7 @@ public class IBettingServiceImpl implements IBettingService {
 
         ApiResponse<String> response = userFeignClient.play(debitRequest);
 
-        if (!response.getSuccess()) {
+        if (!response.isSuccess()) {
             throw new AppException(response.getMessage());
         }
     }
@@ -133,7 +133,7 @@ public class IBettingServiceImpl implements IBettingService {
     private BigDecimal calculateTotalOdds(List<PredictionRequest.Bet> bets) {
         return bets.stream()
                 .map(this::calculateBetOdds)
-                .reduce(BigDecimal.ONE, BigDecimal::multiply);
+                .reduce(BigDecimal.ONE, BigDecimal::add);
     }
 
     private BigDecimal calculateBetOdds(PredictionRequest.Bet bet) {

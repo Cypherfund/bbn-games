@@ -2,6 +2,8 @@ package com.cypherfund.bbn.services.impl;
 
 import com.cypherfund.bbn.dao.entity.*;
 import com.cypherfund.bbn.dao.repository.*;
+import com.cypherfund.bbn.dao.specifications.EventSearchSpecification;
+import com.cypherfund.bbn.dao.specifications.filters.EventFilterCriteria;
 import com.cypherfund.bbn.dto.CategoryDto;
 import com.cypherfund.bbn.dto.EventDto;
 import com.cypherfund.bbn.dto.OutcomeDto;
@@ -11,6 +13,9 @@ import com.cypherfund.bbn.models.CreateOutcomeRequest;
 import com.cypherfund.bbn.utils.Enumerations;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -132,8 +137,11 @@ public class AdminService {
     }
 
     // Get events and outcomes by tournament
-    public List<EventDto> getEventsByTournament(Long tournamentId) {
-        return eventRepository.findByTournamentIdAndEventDateAfter(tournamentId, Instant.now()).stream()
+    public List<EventDto> getEventsByTournament(EventFilterCriteria eventFilterCriteria) {
+        PageRequest pageRequest = PageRequest.of(0, 20);
+        Specification<Event> specification = EventSearchSpecification.getEventCriteria(eventFilterCriteria);
+        Page<Event> eventPage = eventRepository.findAll(specification, pageRequest);
+        return eventPage.getContent().stream()
                 .map((element) -> modelMapper.map(element, EventDto.class))
                 .toList();
     }
